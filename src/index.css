@@ -1,0 +1,1210 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap");
+
+// ==========================================================================
+// 1. Токены и SCSS-переменные (100% solid colors, без градиентов)
+// ==========================================================================
+$bg-canvas: #eae6df;
+$bg-surface: #ffffff;
+$bg-technical: #f4f2ed;
+$bg-muted: #e2ddd3;
+
+$text-primary: #141416;
+$text-secondary: #4a4a52;
+$text-inverse: #ffffff;
+
+$border-base: #d5cfc4;
+$border-strong: #141416;
+
+$accent-terracotta: #e05a2b;
+$accent-terracotta-hover: #c4471c;
+$accent-emerald: #0f766e;
+$accent-emerald-hover: #0b5d57;
+$accent-cobalt: #1d4ed8;
+$accent-amber: #d97706;
+
+$font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+$font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+$radius-sm: 2px;
+$radius-md: 2px;
+$container-max: 1440px;
+$gutter: 24px;
+$gutter-mobile: 14px;
+
+$accents: (
+  "terracotta": (
+    "bg": $accent-terracotta,
+    "hover": $accent-terracotta-hover,
+    "fg": $text-inverse,
+    "border": $accent-terracotta,
+  ),
+  "emerald": (
+    "bg": $accent-emerald,
+    "hover": $accent-emerald-hover,
+    "fg": $text-inverse,
+    "border": $accent-emerald,
+  ),
+  "cobalt": (
+    "bg": $accent-cobalt,
+    "hover": #163db0,
+    "fg": $text-inverse,
+    "border": $accent-cobalt,
+  ),
+  "amber": (
+    "bg": $accent-amber,
+    "hover": #b46204,
+    "fg": $text-primary,
+    "border": $border-strong,
+  ),
+);
+
+// ==========================================================================
+// 2. Миксины
+// ==========================================================================
+@mixin flat-surface($bg: $bg-surface, $border: $border-base, $radius: $radius-sm) {
+  background-color: $bg;
+  border: 1px solid $border;
+  border-radius: $radius;
+}
+
+@mixin tactile-shift($dx: -2px, $dy: -2px, $hover-border: $border-strong) {
+  transition:
+    border-color 0.12s ease,
+    background-color 0.12s ease,
+    transform 0.12s ease;
+
+  &:hover {
+    border-color: $hover-border;
+    transform: translate($dx, $dy);
+  }
+}
+
+@mixin respond-below($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+
+// ==========================================================================
+// 3. Базовые стили и CSS Custom Properties
+// ==========================================================================
+:root {
+  --bg-canvas: #{$bg-canvas};
+  --bg-surface: #{$bg-surface};
+  --bg-technical: #{$bg-technical};
+  --bg-muted: #{$bg-muted};
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --border-base: #{$border-base};
+  --border-strong: #{$border-strong};
+  --accent-terracotta: #{$accent-terracotta};
+  --accent-emerald: #{$accent-emerald};
+  --accent-cobalt: #{$accent-cobalt};
+  --accent-amber: #{$accent-amber};
+  --font-sans: #{$font-sans};
+  --font-mono: #{$font-mono};
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $bg-canvas;
+  color: $text-primary;
+  font-family: $font-sans;
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.mono {
+  font-family: $font-mono;
+  font-variant-numeric: tabular-nums;
+}
+
+.container {
+  width: 100%;
+  max-width: $container-max;
+  margin: 0 auto;
+  padding-left: $gutter;
+  padding-right: $gutter;
+
+  @include respond-below(780px) {
+    padding-left: $gutter-mobile;
+    padding-right: $gutter-mobile;
+  }
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $bg-canvas;
+}
+
+// ==========================================================================
+// 4. Кнопки и акцентные плашки
+// ==========================================================================
+.tag-chip {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: $radius-sm;
+  border: 1px solid currentColor;
+
+  @each $name, $palette in $accents {
+    &--#{$name} {
+      background-color: map-get($palette, "bg");
+      color: map-get($palette, "fg");
+      border-color: map-get($palette, "border");
+    }
+  }
+}
+
+.btn-primary {
+  padding: 11px 18px;
+  background-color: $accent-terracotta;
+  color: $text-inverse;
+  border: 1px solid $border-strong;
+  border-radius: $radius-sm;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  @include tactile-shift(-1px, -1px, $border-strong);
+
+  &:hover {
+    background-color: $accent-terracotta-hover;
+  }
+}
+
+.btn-outline {
+  padding: 9px 14px;
+  @include flat-surface($bg-surface, $border-strong);
+  font-size: 12px;
+  font-weight: 700;
+
+  &:hover {
+    background-color: $bg-muted;
+  }
+}
+
+.btn-ghost {
+  padding: 9px 14px;
+  @include flat-surface($bg-technical, $border-base);
+  color: $text-secondary;
+  font-size: 12px;
+  font-weight: 600;
+
+  &:hover {
+    border-color: $border-strong;
+    color: $text-primary;
+  }
+}
+
+// ==========================================================================
+// 5. Липкая шапка, поиск и виджет корзины
+// ==========================================================================
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: $bg-surface;
+  border-bottom: 2px solid $border-strong;
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: auto minmax(240px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 72px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  @include respond-below(780px) {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.brand-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: $text-primary;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 10px;
+  background-color: $text-primary;
+  color: $bg-canvas;
+  font-family: $font-mono;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  border-radius: $radius-sm;
+}
+
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+}
+
+.brand-subtitle {
+  font-family: $font-mono;
+  font-size: 10px;
+  font-weight: 600;
+  color: $text-secondary;
+  letter-spacing: 0.05em;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  @include flat-surface($bg-technical, $border-strong);
+  height: 42px;
+  overflow: hidden;
+
+  @include respond-below(780px) {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  &:focus-within {
+    background-color: $bg-surface;
+    outline: 2px solid $accent-cobalt;
+    outline-offset: -1px;
+  }
+
+  .search-prefix {
+    padding: 0 12px;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    background-color: $bg-muted;
+    border-right: 1px solid $border-base;
+    font-family: $font-mono;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .search-input {
+    flex: 1;
+    height: 100%;
+    border: none;
+    background: transparent;
+    padding: 0 12px;
+    font-size: 14px;
+
+    &::placeholder {
+      color: $text-secondary;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .search-clear-btn {
+    width: 34px;
+    height: 100%;
+    border: none;
+    border-left: 1px solid $border-base;
+    background-color: $bg-technical;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+
+    &:hover {
+      background-color: $accent-terracotta;
+      color: $text-inverse;
+    }
+  }
+}
+
+.cart-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 14px;
+  @include flat-surface($bg-technical, $border-strong);
+  @include tactile-shift(-1px, -1px, $border-strong);
+
+  &:hover {
+    background-color: $bg-muted;
+  }
+
+  &__label {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+  }
+
+  &__metrics {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  &__sum {
+    color: $accent-terracotta;
+  }
+
+  &--active {
+    background-color: $text-primary;
+    color: $text-inverse;
+    border-color: $text-primary;
+
+    .cart-widget__sum {
+      color: $text-inverse;
+    }
+
+    &:hover {
+      background-color: $accent-terracotta;
+      border-color: $accent-terracotta;
+      color: $text-inverse;
+    }
+  }
+}
+
+// ==========================================================================
+// 6. Выдвижной реестр корзины
+// ==========================================================================
+.cart-drawer {
+  background-color: $bg-surface;
+  border-bottom: 2px solid $border-strong;
+  padding: 20px 0;
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  &__title {
+    margin: 6px 0 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__empty {
+    margin: 0;
+    padding: 14px 16px;
+    @include flat-surface($bg-technical, $border-base);
+    color: $text-secondary;
+  }
+
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid $border-base;
+  }
+
+  &__summary {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 15px;
+
+    strong {
+      font-size: 20px;
+      color: $accent-terracotta;
+    }
+  }
+}
+
+.cart-table-wrap {
+  overflow-x: auto;
+  border: 1px solid $border-base;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $bg-surface;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background-color: $bg-technical;
+    border-bottom: 1px solid $border-strong;
+    font-family: $font-mono;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid $border-base;
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .cart-row-brand {
+    color: $text-secondary;
+    font-size: 12px;
+  }
+
+  .cart-row-total {
+    font-weight: 700;
+  }
+}
+
+.inline-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid $border-strong;
+  background-color: $bg-technical;
+
+  button {
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    font-weight: 700;
+
+    &:hover:not(:disabled) {
+      background-color: $text-primary;
+      color: $text-inverse;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
+
+// ==========================================================================
+// 7. Основной контент, баннер и преимущества
+// ==========================================================================
+.main-content {
+  flex: 1;
+  padding-top: 20px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hero-spec-panel {
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  @include flat-surface($bg-surface, $border-strong, $radius-md);
+  border-width: 2px;
+
+  @include respond-below(1120px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__main {
+    padding: 22px 24px;
+    border-right: 1px solid $border-base;
+
+    @include respond-below(1120px) {
+      border-right: none;
+      border-bottom: 1px solid $border-base;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  &__code {
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-secondary;
+  }
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+  }
+
+  &__desc {
+    margin: 0;
+    color: $text-secondary;
+    font-size: 14px;
+    max-width: 74ch;
+  }
+
+  &__aside {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+
+    @include respond-below(1120px) {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+    }
+
+    @include respond-below(780px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.spec-box {
+  padding: 16px 20px;
+  background-color: $bg-technical;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+
+  + .spec-box {
+    border-top: 1px solid $border-base;
+
+    @include respond-below(1120px) {
+      border-top: none;
+      border-left: 1px solid $border-base;
+    }
+
+    @include respond-below(780px) {
+      border-left: none;
+      border-top: 1px solid $border-base;
+    }
+  }
+
+  &--emerald {
+    background-color: $accent-emerald;
+    color: $text-inverse;
+  }
+
+  &__label {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+  }
+
+  &__value {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__note {
+    font-size: 12px;
+    opacity: 0.9;
+  }
+}
+
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+
+  @include respond-below(1120px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-below(780px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.advantage-card {
+  @include flat-surface($bg-surface, $border-base);
+  border-top: 4px solid $border-strong;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  @include tactile-shift(-2px, -2px, $border-strong);
+
+  @each $name, $palette in $accents {
+    &--#{$name} {
+      border-top-color: map-get($palette, "bg");
+    }
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__code {
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-secondary;
+  }
+
+  &__metric {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 7px;
+    @include flat-surface($bg-technical, $border-base);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 13px;
+    color: $text-secondary;
+    line-height: 1.4;
+  }
+}
+
+// ==========================================================================
+// 8. Панель фильтров и сортировки
+// ==========================================================================
+.toolbar-panel {
+  @include flat-surface($bg-surface, $border-strong);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  @include flat-surface($bg-technical, $border-base);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    background-color: $bg-muted;
+    border-color: $border-strong;
+  }
+
+  &__count {
+    font-size: 11px;
+    padding: 1px 6px;
+    background-color: $bg-surface;
+    color: $text-primary;
+    border-radius: $radius-sm;
+  }
+
+  &--active {
+    background-color: $text-primary;
+    color: $text-inverse;
+    border-color: $text-primary;
+
+    &:hover {
+      background-color: $text-primary;
+    }
+
+    .category-btn__count {
+      background-color: $accent-terracotta;
+      color: $text-inverse;
+    }
+  }
+}
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid $border-base;
+}
+
+.controls-left,
+.controls-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.stock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+
+    &:checked + .stock-toggle__box {
+      background-color: $accent-emerald;
+      border-color: $accent-emerald;
+
+      &::after {
+        content: "✓";
+        color: $text-inverse;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1;
+      }
+    }
+  }
+
+  &__box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid $border-strong;
+    background-color: $bg-surface;
+    border-radius: $radius-sm;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.results-counter {
+  font-size: 12px;
+  color: $text-secondary;
+
+  strong {
+    color: $text-primary;
+    font-size: 13px;
+  }
+}
+
+.sort-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &__label {
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-secondary;
+  }
+}
+
+.sort-select {
+  height: 36px;
+  padding: 0 10px;
+  @include flat-surface($bg-technical, $border-strong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-reset-inline {
+  height: 36px;
+  padding: 0 12px;
+  @include flat-surface($bg-muted, $border-strong);
+  font-size: 12px;
+  font-weight: 700;
+
+  &:hover {
+    background-color: $accent-terracotta;
+    color: $text-inverse;
+    border-color: $accent-terracotta;
+  }
+}
+
+// ==========================================================================
+// 9. Сетка каталога и карточка товара
+// ==========================================================================
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  @include flat-surface($bg-surface, $border-base);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  @include tactile-shift(-2px, -2px, $border-strong);
+
+  &--out {
+    background-color: $bg-technical;
+  }
+
+  &__media {
+    position: relative;
+    height: 188px;
+    background-color: $bg-muted;
+    border-bottom: 1px solid $border-base;
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+
+  &__sku {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 3px 7px;
+    background-color: $text-primary;
+    color: $text-inverse;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: $radius-sm;
+  }
+
+  &__body {
+    padding: 14px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  &__meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  &__category {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $accent-cobalt;
+  }
+
+  &__brand {
+    font-weight: 700;
+    color: $text-secondary;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  &__specs {
+    margin: 4px 0 0;
+    padding: 8px 10px;
+    @include flat-surface($bg-technical, $border-base);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__stock {
+    margin-top: auto;
+    padding-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  &__footer {
+    padding: 12px 16px 16px;
+    border-top: 1px solid $border-base;
+    background-color: $bg-technical;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 12px;
+
+  + .spec-row {
+    padding-top: 5px;
+    border-top: 1px solid $border-base;
+  }
+
+  &__key {
+    color: $text-secondary;
+  }
+
+  &__val {
+    font-weight: 600;
+    text-align: right;
+    color: $text-primary;
+  }
+}
+
+.stock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  display: inline-block;
+
+  &--in {
+    background-color: $accent-emerald;
+  }
+
+  &--low {
+    background-color: $accent-amber;
+  }
+
+  &--out {
+    background-color: $text-secondary;
+  }
+}
+
+.price-block {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+
+  .price-current-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .price-current {
+    font-size: 20px;
+    font-weight: 800;
+    color: $text-primary;
+  }
+
+  .price-unit {
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-secondary;
+  }
+
+  .price-old {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-secondary;
+    text-decoration: line-through;
+  }
+}
+
+.purchase-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+}
+
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  @include flat-surface($bg-surface, $border-strong);
+
+  &__btn {
+    width: 32px;
+    height: 100%;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 700;
+
+    &:hover:not(:disabled) {
+      background-color: $bg-muted;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__input {
+    width: 44px;
+    height: 100%;
+    border: none;
+    border-left: 1px solid $border-base;
+    border-right: 1px solid $border-base;
+    background: transparent;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+
+    &:focus {
+      outline: none;
+      background-color: $bg-technical;
+    }
+  }
+}
+
+.add-to-cart-btn {
+  height: 38px;
+  padding: 0 12px;
+  background-color: $accent-terracotta;
+  color: $text-inverse;
+  border: 1px solid $border-strong;
+  border-radius: $radius-sm;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: background-color 0.12s ease;
+
+  &:hover:not(:disabled) {
+    background-color: $accent-terracotta-hover;
+  }
+
+  &--in-cart {
+    background-color: $accent-emerald;
+
+    &:hover:not(:disabled) {
+      background-color: $accent-emerald-hover;
+    }
+  }
+
+  &:disabled {
+    background-color: $bg-muted;
+    color: $text-secondary;
+    border-color: $border-base;
+    cursor: not-allowed;
+  }
+}
+
+// ==========================================================================
+// 10. Пустое состояние и подвал
+// ==========================================================================
+.empty-state {
+  @include flat-surface($bg-surface, $border-strong, $radius-md);
+  border-width: 2px;
+  padding: 36px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  &__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  &__desc {
+    margin: 0 0 8px;
+    max-width: 52ch;
+    color: $text-secondary;
+    font-size: 14px;
+  }
+}
+
+.site-footer {
+  background-color: $text-primary;
+  color: $bg-canvas;
+  border-top: 2px solid $border-strong;
+  padding: 20px 0;
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .footer-col p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: $border-base;
+  }
+
+  .footer-col--right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 11px;
+  }
+}
